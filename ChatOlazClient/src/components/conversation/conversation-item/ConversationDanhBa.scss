@@ -1,0 +1,36 @@
+@import '../../../styles/_colors';
+
+.conversationDanhBa {
+    display: grid;
+    grid-template-columns: 40px 1fr max-content;
+    grid-gap: 10px;
+    color: $contrasted-primary-text; // $contrasting-primary-text-color;
+    font-size: 1.3rem;
+    border-bottom: 1px solid $primary-dark;
+    padding: 20px 20px 20px 15px;
+
+  &.active,
+  &:hover {
+    background: $primary-dark;
+  }
+  
+  &:hover {
+    cursor: pointer;
+  }
+  
+  img {
+    grid-row: span 1;
+    height: 65px;
+    width: 65px;
+    border-radius: 100%;
+  }
+
+  .title-text {
+    font-weight: bold;
+    padding-left: 25px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    line-height: 65px;
+  }
+}
