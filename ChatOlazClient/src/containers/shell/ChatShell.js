@@ -44,7 +44,11 @@ class ChatShell extends React.Component{
             vartar_friend : '',
             list_all_messageByUser : [],
             message_send : "",
-            list_all_messages: []
+            list_all_messages: [],
+            ten_group : "",
+            avatarGroup : "",
+            id_group_conversation_click : '',
+            isClick_Conversation_Group : ''
         };
         socket.on('change_message_user',(newMessage)=>{
             var list_all_message_tam = this.state.list_all_messages;
@@ -59,20 +63,34 @@ class ChatShell extends React.Component{
                 })
             }
         });
+        socket.on('change_message_user_group',(newMessage)=>{
+            var list_all_message_tam = this.state.list_all_messages;
+            if(this.state.id_group_conversation_click == newMessage.id){
+                
+                list_all_message_tam.push(newMessage)
+                list_all_message_tam.sort((a,b)=>{
+                    return new Date(a.date).getTime() - new Date(b.date).getTime()
+                });
+                this.setState({
+                    list_all_messages : list_all_message_tam.reverse()
+                })
+            }
+        });
     }
     send_message_submitChange = (newMessage)=>{
         socket.emit('send_message',(newMessage));
     }
+
+    send_message_submitChange_Group = (newMessage)=>{
+        socket.emit('send_message_group',(newMessage));
+    }
     componentDidMount(){
-        
+
         this.fetchAllFriends();
         this.fetchAllGroups();  
     }
     allMessagesMyAndOther =(listMyMessage,listOtherMessage)=>{
         var list_all_tam = listMyMessage.concat(listOtherMessage);
-        list_all_tam.map((item)=>{
-            console.log("ket hop "+item.messageText);
-        })
         this.setState({
             list_all_messages : list_all_tam
         })
@@ -130,9 +148,6 @@ class ChatShell extends React.Component{
             list_all_message.sort((a,b)=>{
                 return new Date(a.date).getTime() - new Date(b.date).getTime()
             });
-            list_all_message.map((items)=>{
-                console.log(items.id + " giay: " + items.id.getMinutes)
-            })
             this.setState({
                 list_other_message : other_message,
                 list_all_messages : list_all_message.reverse()
@@ -167,7 +182,7 @@ class ChatShell extends React.Component{
             console.log(res.data.response);
           })
       };
-
+    
       // bắt sự kiện khi click vào 1 cuộc hội thoại 
     ClickCoversation =(id_friend,ten_friend,avatarFriend)=>{
         this.fetchAllFriends()
@@ -187,7 +202,35 @@ class ChatShell extends React.Component{
             list_my_message : my_message.reverse(),
             ten_friend_conversation_click : ten_friend,
             vartar_friend : avatarFriend,
-            id_friend_conversation_click : id_friend
+            id_friend_conversation_click : id_friend,
+            isClick_Conversation_Group : false
+        })
+    }
+    fetchAll_MessageGroup = (id_group) =>{
+        var all_message_group = [];
+        for(var i =0 ; i< this.state.groups.length ; i++){
+            if(this.state.groups[i].id == id_group){
+                if(this.state.groups[i].id.length > 0)
+                    all_message_group = all_message_group.concat(this.state.groups[i].messages)
+                break;
+            }
+        }
+        all_message_group.sort((a,b)=>{
+            return new Date(a.date).getTime() - new Date(b.date).getTime()
+        });
+        this.setState({
+            list_all_messages : all_message_group.reverse(),
+        })
+    }
+    // bat su kien khi click vao 1 group 
+    ClickConversation_Group = (id_group,ten_group,avatarGroup)=>{
+        this.fetchAllGroups();
+        this.fetchAll_MessageGroup(id_group);
+        this.setState({
+            ten_group : ten_group,
+            avatarGroup : avatarGroup,
+            id_group_conversation_click : id_group,
+            isClick_Conversation_Group: true
         })
     }
     render_conversationSearch =() =>{
@@ -202,44 +245,6 @@ class ChatShell extends React.Component{
     renderConversation = () =>{
         return(
             <>
-                {/* {this.state.friends.map((items)=>{
-                    return(
-                        items.friends.map((item)=>{
-                            var check = false;
-                            return(
-                                items.messages.map((message)=>{
-                                    if(message.id_toFriend == item.idFriend){
-                                        check = true;
-                                        return(
-                                            <div className="conversation" onClick ={() =>this.ClickCoversation(item.idFriend,item.tenFriend,item.avatarFriend) }>
-                                                <img src={ipConfigg + "/api/files/" + item.avatarFriend} alt={images_group}/>
-                                                <div className="title-text">{item.tenFriend}</div>
-                                                <div className="created-date">{message.thoi_gian}</div>
-                                                <div className="conversation-message">
-                                                    {message.messageText}
-                                                </div>
-                                            </div>
-                                        );
-                                        
-                                    }
-                                    
-                                    // else if(message.id_toFriend != item.idFriend){
-                                    //     console.log("nhay vao luon")
-                                    //     return(
-                                    //         <div className="conversation" onClick ={() =>this.ClickCoversation(item.idFriend,item.tenFriend) }>
-                                    //             <img src={ipConfigg + "/api/files/" + item.avatarFriend}/>
-                                    //             <div className="title-text">{item.tenFriend}</div>
-                                    //             <div className="created-date"></div>
-                                    //             <div className="conversation-message">
-                                    //             </div>
-                                    //         </div>
-                                    //     );
-                                    // }
-                                })
-                            )
-                        })
-                    );
-                })}; */}
                 {this.state.friends.map((items)=>{
                     return(
                         items.friends.map((item)=>{
@@ -261,7 +266,7 @@ class ChatShell extends React.Component{
                 
                 {this.state.groups.map((items)=>{
                     return(
-                        <div className="conversation" onClick ={() =>this.ClickCoversation(items.id,items.group_name,images_group) }>
+                        <div className="conversation" onClick ={() =>this.ClickConversation_Group(items.id,items.group_name,images_group) }>
                             <img src={require("../../images/img/users.jpg")}/>
                             <div className="title-text">{items.group_name}</div>
                             <div className="created-date">2020</div>
@@ -270,6 +275,50 @@ class ChatShell extends React.Component{
                             </div>
                         </div>
                     )
+                })}
+            </>
+        )
+    }
+    //
+    renderAllMessagesGroup = () =>{
+        const messageClass_My = classNames('message-row', {
+            'you-message': true,
+            'other-message': false
+        });
+        const messageClass_Other = classNames('message-row', {
+            'you-message': false,
+            'other-message': true
+        });
+        const {list_all_messages,id_group_conversation_click} = this.state;
+        return(
+            <>
+                {list_all_messages.map((items)=>{
+                    if(items.id_member == this.state.id){
+                        return(
+                            <div className={messageClass_My}>
+                                <div className="message-content">
+                                    <img src={ipConfigg + "/api/files/" +items.avatarMember} alt="" />
+                                    <div className="message-text">
+                                        {items.messageText}
+                                    </div>
+                                    <div className="message-time">{items.thoi_gian}</div>
+                                </div>
+                            </div>
+                        )
+                    }
+                    else {
+                        return(
+                            <div className={messageClass_Other}>
+                                <div className="message-content">
+                                    <img src={ipConfigg + "/api/files/" +items.avatarMember} alt="" />
+                                    <div className="message-text">
+                                        {items.messageText}
+                                    </div>
+                                    <div className="message-time">{items.thoi_gian}</div>
+                                </div>
+                            </div>
+                        )
+                    }
                 })}
             </>
         )
@@ -318,9 +367,6 @@ class ChatShell extends React.Component{
             </>
         )
     }
-    onClickItem = ()=>{
-        console.log("da click");
-    };
     handleFormSubmit = (e) => {
         e.preventDefault();
         if(this.state.message_send != ""){
@@ -366,16 +412,117 @@ class ChatShell extends React.Component{
             })
         }
     };
-    render_chatTitle = ()=>{
+    render_chatTitle_Friend = ()=>{
         return(
             <div id="chat-title">
                 <span><img src={ipConfigg + "/api/files/" +this.state.vartar_friend} alt="" />{this.state.ten_friend_conversation_click}</span>
             </div>
         )
     }
+    render_chatTitle_Group = ()=>{
+        return(
+            <div id="chat-title">
+                <span><img src={this.state.avatarGroup} alt="" />{this.state.ten_group}</span>
+            </div>
+        )
+    }
+	render_submitMessages =()=>{
+        return(
+            <>  
+                <form id="chat-form" onSubmit ={this.handleFormSubmit} >
+                    <div title="Add Attachment">
+                            <AttachmentIcon />
+                    </div>
+                        <input 
+                        type="text" 
+                        name="message_send"
+                        placeholder="type a message" 
+                        onChange={this.handleChange}
+                        value = {this.state.message_send}
+                    />
+                    <FormButton disabled = {false} >Send</FormButton>
+                </form>
+            </>
+        )
+    }
+    //
+    handleFormSubmit_group = (e) => {
+        e.preventDefault();
+        if(this.state.message_send != ""){
+            var toDay = new Date();
+            var ngay_gio = toDay.getDate() + "/" + (toDay.getMonth()+1) + "/" + toDay.getFullYear() + " "+ toDay.getHours()+":"+toDay.getMinutes()+":"+toDay.getSeconds()+"s";
+            const message_submit = {
+                id : this.state.id_group_conversation_click,
+                date:new Date(),
+                id_member : this.state.id,
+                messageText : this.state.message_send,
+                thoi_gian : ngay_gio,
+                avatarMember: localStorage.getItem("avatar"),
+                trang_thai :1 
+            };
+            // listMessage_Tam.map((item)=>{
+            //     console.log(item)
+            // })
+            var list_all_message_tam_submit = this.state.list_all_messages;
+            list_all_message_tam_submit.push(message_submit)
+            list_all_message_tam_submit.sort((a,b)=>{
+                return new Date(a.date).getTime() - new Date(b.date).getTime()
+            });
+            this.setState({
+                list_all_messages : list_all_message_tam_submit.reverse(),
+                message_send : ""
+            })
+            // goi new messages qua socket
+            this.send_message_submitChange_Group(message_submit);
+            const { id_group_conversation_click } = this.state;
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+           const body = JSON.stringify({id_group_conversation_click,list_all_message_tam_submit });
+          axios
+            .post(ipConfigg + '/api/addMessageToGroup',body,config)
+            .then((res)=>{
+
+            })
+        }
+    };
+    render_submitMessages_group =()=>{
+        return(
+            <>  
+                <form id="chat-form" onSubmit ={this.handleFormSubmit_group} >
+                    <div title="Add Attachment">
+                            <AttachmentIcon />
+                    </div>
+                        <input 
+                        type="text" 
+                        name="message_send"
+                        placeholder="type a message" 
+                        onChange={this.handleChange}
+                        value = {this.state.message_send}
+                    />
+                    <FormButton disabled = {false} >Send</FormButton>
+                </form>
+            </>
+        )
+    }
     render(){
+		let submit_message;
+        let title_message;
+        let render_AllMessage ;   
+        if(this.state.id_group != '' && this.state.isClick_Conversation_Group){
+            render_AllMessage = this.renderAllMessagesGroup();
+            title_message = this.render_chatTitle_Group();
+            submit_message = this.render_submitMessages_group();
+        }
+        else if(this.state.id_friend_conversation_click != '' && this.state.isClick_Conversation_Group == false){
+            render_AllMessage = this.renderAllMessages();
+            title_message = this.render_chatTitle_Friend();
+            submit_message = this.render_submitMessages();
+        }
         return (
-            <>
+             <>
                 <div id="myBody">
                     <div id="chat-container">
                         {this.render_conversationSearch()}
@@ -383,23 +530,11 @@ class ChatShell extends React.Component{
                             {this.renderConversation()}
                         </div>
                         <div id="chat-message-list">
-                            {this.renderAllMessages()}
+                            {render_AllMessage}
                         </div>
                         <NewConversation />
-                        {this.render_chatTitle()}
-                        <form id="chat-form" onSubmit ={this.handleFormSubmit} >
-                            <div title="Add Attachment">
-                                <AttachmentIcon />
-                            </div>
-                            <input 
-                                type="text" 
-                                name="message_send"
-                                placeholder="type a message" 
-                                onChange={this.handleChange}
-                                value = {this.state.message_send}
-                            />
-                            <FormButton disabled = {false} >Send</FormButton>
-                        </form>
+                        {title_message}
+                        {submit_message}
                     </div>
                 </div>
             </>
