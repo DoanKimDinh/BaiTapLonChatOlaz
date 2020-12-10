@@ -50,11 +50,13 @@ io.on("connection",(socket)=>{
         socket.broadcast.emit('get_dataFriendRequest');
     });
     socket.on('change_friend_request',(id) =>{    
-        console.log("nhan thay doi" + id);
         socket.broadcast.emit('change_dataFriend');
     });
     socket.on('send_message',(newMessage)=>{
         socket.broadcast.emit('change_message_user',(newMessage));
+    })
+    socket.on('send_message_group',(newMessage)=>{
+        socket.broadcast.emit('change_message_user_group',(newMessage));
     })
 });
 server.listen(3001,()=>{
@@ -1284,7 +1286,8 @@ app.post('/api/createGroup', async (req, res) => {
         Item: {
             "id": uuidv1(),
             "group_name": groupName,
-            "group_members": members
+            "group_members": members,
+            "messages": []
         }
     }
     docClient.put(params, (err, data) => {
@@ -1437,15 +1440,29 @@ app.post('/api/updateGroup', async (req, res) => {
 app.post('/api/addMessageToFriend', async (req, res)=>{
     const id = req.body.id;
     const listMessage_update = req.body.listMessage_Tam;
-    // const params = {
-    //     TableName: "UserOlaz",
-    //     FilterExpression: "id = :id",
-    //     ExpressionAttributeValues: {
-    //         ":id": id
-    //     },
-    // };
     const paramsUpdate = {
         TableName: "UserOlaz",
+        Key: {
+            "id": id
+        },
+        UpdateExpression: "set messages= :messages",
+        ExpressionAttributeValues: {
+            ":messages": listMessage_update,
+        },
+        ReturnValues: "UPDATED_NEW"
+    }
+    docClient.update(paramsUpdate,(err,data)=>{
+        if(err){
+            console.log(err)
+        }
+    })
+});
+
+app.post('/api/addMessageToGroup', async (req, res)=>{
+    const id = req.body.id_group_conversation_click;
+    const listMessage_update = req.body.list_all_message_tam_submit;
+    const paramsUpdate = {
+        TableName: "GroupOlaz",
         Key: {
             "id": id
         },
