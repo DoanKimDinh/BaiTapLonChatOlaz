@@ -22,6 +22,7 @@ import classNames from 'classnames';
 import TrangChu,{socket} from '../../pages/TrangChu';
 import makeToast from "../../components/controls/toast/Toaster";
 import axios from "axios";
+import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons';
 const images_group = require("../../images/img/users.jpg")
 const IP = require('../../config/config')
 var ipConfigg = IP.PUBLIC_IP;
@@ -48,8 +49,11 @@ class ChatShell extends React.Component{
             ten_group : "",
             avatarGroup : "",
             id_group_conversation_click : '',
-            isClick_Conversation_Group : ''
+            isClick_Conversation_Group : '',
+            redirect : 0,
         };
+        this.localVideoref = React.createRef();
+        this.remoteVideoref = React.createRef();
         socket.on('change_message_user',(newMessage)=>{
             var list_all_message_tam = this.state.list_all_messages;
             if((newMessage.id_toFriend == this.state.id) && (id_conversation_click == newMessage.id)){
@@ -416,16 +420,80 @@ class ChatShell extends React.Component{
         return(
             <div id="chat-title">
                 <span><img src={ipConfigg + "/api/files/" +this.state.vartar_friend} alt="" />{this.state.ten_friend_conversation_click}</span>
+                <div  title="Call video" onClick = {(evt) => this.click_callVideo(evt)}>
+                    <TrashIcon />
+                </div>
             </div>
         )
     }
+
     render_chatTitle_Group = ()=>{
         return(
             <div id="chat-title">
                 <span><img src={this.state.avatarGroup} alt="" />{this.state.ten_group}</span>
+                <div  title="Call video"  >
+                    <TrashIcon />
+                </div>
             </div>
         )
     }
+    click_callVideo =(evt) =>{
+        evt.preventDefault();
+        this.setState({
+            redirect : 1
+        })
+    }
+    render_callvideo =()=>{
+        this.pc = new RTCPeerConnection(null);
+        this.pc.onicecandidate = (e) =>{
+            if(e.candidate)
+                console.log(JSON.stringify(e.candidate))
+        }
+        this.pc.oniceconnectionstatechange = (e)=>{
+            console.log(e)
+        }
+        this.pc.onaddstream = (e)=>{
+            this.remoteVideoref.current.srcObject = e.stream
+        }
+        const constraints = {video : true};
+        const succsess = (stream) =>{
+            this.localVideoref.current.srcObject = stream
+            this.pc.addStream(stream)
+        }
+        const failure = (e)=>{
+            console.log(" get video loi",e);
+        }
+        navigator.getUserMedia(constraints,succsess,failure)
+        
+        return(
+            <>
+                <div id="myBody">
+                    <div id="chat-container">
+                        <video ref={this.localVideoref} autoPlay></video>
+                    </div> 
+                </div>
+            </>
+        )
+    }
+    createOffer =()=>{
+        this.pc.createOffer({offerToReceiveVideo : -1})
+            .then(sdp =>{
+                console.log(JSON.stringify(sdp))
+                this.pc.setLocalDescription(sdp)
+            },e=>{})
+    }
+    setRemoteDescription = ()=>{
+        const desc = JSON.parse(this.textref.value);
+        this.pc.setRemoteDescription(new RTCSessionDescription(desc));
+    }
+    createAnswer = ()=>{
+        this.pc.createAnswer({offerToReceiveVideo: 1})
+            .then(sdp =>{
+                console.log(JSON.stringify(sdp))
+                this.pc.setLocalDescription(sdp)
+            },e =>{})
+    }
+
 	render_submitMessages =()=>{
         return(
             <>  
@@ -520,6 +588,9 @@ class ChatShell extends React.Component{
             render_AllMessage = this.renderAllMessages();
             title_message = this.render_chatTitle_Friend();
             submit_message = this.render_submitMessages();
+        }
+        if(this.state.redirect == 1){
+            return this.render_callvideo();
         }
         return (
              <>
