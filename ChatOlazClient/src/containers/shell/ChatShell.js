@@ -22,6 +22,7 @@ import classNames from 'classnames';
 import TrangChu,{socket} from '../../pages/TrangChu';
 import makeToast from "../../components/controls/toast/Toaster";
 import axios from "axios";
+import { faThinkPeaks } from '@fortawesome/free-brands-svg-icons';
 const images_group = require("../../images/img/users.jpg")
 const IP = require('../../config/config')
 var ipConfigg = IP.PUBLIC_IP;
@@ -34,22 +35,24 @@ class ChatShell extends React.Component{
             id : localStorage.getItem('id'),
             onclickDanhBa : true,
             list_conversation : [],
-            list_my_message : [],
             list_other_message : [],
             friends: [],
             info_friend_conversation : [],
             groups :[],
-            ten_friend_conversation_click : '',
-            id_friend_conversation_click : '',
-            vartar_friend : '',
+            ten_friend_conversation_click :sessionStorage.getItem("ten_friend_sendMessages"),
+            id_friend_conversation_click : sessionStorage.getItem("id_friend_sendMessages"),
+            vartar_friend : sessionStorage.getItem("avatar_friend_sendMessages"),
             list_all_messageByUser : [],
             message_send : "",
             list_all_messages: [],
-            ten_group : "",
-            avatarGroup : "",
-            id_group_conversation_click : '',
-            isClick_Conversation_Group : ''
+            ten_group : sessionStorage.getItem("ten_group_sendMessages"),
+            avatarGroup : require("../../images/img/users.jpg"),
+            id_group_conversation_click : sessionStorage.getItem("id_group_sendMessages"),
+            isClick_Conversation_Group : '',
+            redirect : 0,
         };
+        this.localVideoref = React.createRef();
+        this.remoteVideoref = React.createRef();
         socket.on('change_message_user',(newMessage)=>{
             var list_all_message_tam = this.state.list_all_messages;
             if((newMessage.id_toFriend == this.state.id) && (id_conversation_click == newMessage.id)){
@@ -85,15 +88,9 @@ class ChatShell extends React.Component{
         socket.emit('send_message_group',(newMessage));
     }
     componentDidMount(){
-
         this.fetchAllFriends();
-        this.fetchAllGroups();  
-    }
-    allMessagesMyAndOther =(listMyMessage,listOtherMessage)=>{
-        var list_all_tam = listMyMessage.concat(listOtherMessage);
-        this.setState({
-            list_all_messages : list_all_tam
-        })
+        this.fetchAllGroups();
+        this.ClickCoversation(this.state.id_friend_conversation_click,this.state.ten_friend_conversation_click,this.state.vartar_friend)
     }
     handleChange = (evt) => {
         evt.preventDefault();
@@ -120,7 +117,6 @@ class ChatShell extends React.Component{
     // thong tin cua 1 nguoi ban co trong o chat // goi chung api voi all friend
     // set tất cả các tin nhắn có trong 1 cuộc hội thoại
     fetchAll_OtherMessage = (id_friend_click) => {
-        const  {id}  = id_friend_click
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -141,15 +137,24 @@ class ChatShell extends React.Component{
                     }
                 })
             });
-           // this.allMessagesMyAndOther(this.state.list_my_message,other_message)
            // gop chung danh sach tin nhan cua minh va cua ban 
            // set tất cả các tin nhắn có trong 1 cuộc hội thoại
-            var list_all_message = this.state.list_my_message.concat(other_message);
+           var my_message = [];
+            this.state.friends.map((items)=>{
+                items.messages.map((message)=>{
+                    if(message.id_toFriend == this.state.id_friend_conversation_click){
+                        my_message.push(message)
+                    }
+                })
+            });
+            // this.setState({
+            //     list_my_message : my_message.reverse(),
+            // })
+            var list_all_message = my_message.concat(other_message);
             list_all_message.sort((a,b)=>{
                 return new Date(a.date).getTime() - new Date(b.date).getTime()
             });
             this.setState({
-                list_other_message : other_message,
                 list_all_messages : list_all_message.reverse()
             })
           })
@@ -182,9 +187,28 @@ class ChatShell extends React.Component{
             console.log(res.data.response);
           })
       };
-    
+    fetchAll_MyMessages = ()=>{
+        this.fetchAllFriends();
+        this.fetchAllMessages()
+        var my_message = []
+        this.state.friends.map((items)=>{
+            items.messages.map((message)=>{
+                if(message.id_toFriend == this.state.id_friend_conversation_click){
+                    my_message.push(message)
+                }
+            })
+        });
+        this.setState({
+            list_my_message : my_message.reverse(),
+        })
+    }
       // bắt sự kiện khi click vào 1 cuộc hội thoại 
     ClickCoversation =(id_friend,ten_friend,avatarFriend)=>{
+        // set lai mang rong cho tin nhan
+        var mang_rong = [];
+        this.setState({
+            list_all_messages : mang_rong
+        })
         this.fetchAllFriends()
         this.fetchAllMessages()
         this.fetchAll_OtherMessage(id_friend)
@@ -199,7 +223,7 @@ class ChatShell extends React.Component{
         // luu lai id
         id_conversation_click = id_friend;
         this.setState({
-            list_my_message : my_message.reverse(),
+           // list_my_message : my_message.reverse(),
             ten_friend_conversation_click : ten_friend,
             vartar_friend : avatarFriend,
             id_friend_conversation_click : id_friend,
@@ -262,8 +286,7 @@ class ChatShell extends React.Component{
                             )
                         })
                     )
-                })}
-                
+                })}   
                 {this.state.groups.map((items)=>{
                     return(
                         <div className="conversation" onClick ={() =>this.ClickConversation_Group(items.id,items.group_name,images_group) }>
@@ -384,9 +407,6 @@ class ChatShell extends React.Component{
             };
             var listMessage_Tam = this.state.list_all_messageByUser;
             listMessage_Tam.push(message_submit)
-            // listMessage_Tam.map((item)=>{
-            //     console.log(item)
-            // })
             var list_all_message_tam_submit = this.state.list_all_messages;
             list_all_message_tam_submit.push(message_submit)
             list_all_message_tam_submit.sort((a,b)=>{
@@ -416,21 +436,99 @@ class ChatShell extends React.Component{
         return(
             <div id="chat-title">
                 <span><img src={ipConfigg + "/api/files/" +this.state.vartar_friend} alt="" />{this.state.ten_friend_conversation_click}</span>
+                <div  title="Call video" onClick = {(evt) => this.click_callVideo(evt)}>
+                    <TrashIcon />
+                </div>
             </div>
         )
     }
+
     render_chatTitle_Group = ()=>{
         return(
             <div id="chat-title">
                 <span><img src={this.state.avatarGroup} alt="" />{this.state.ten_group}</span>
+                <div  title="Call video"  >
+                    <TrashIcon />
+                </div>
             </div>
         )
     }
+    click_callVideo =(evt) =>{
+        evt.preventDefault();
+        this.setState({
+            redirect : 1
+        })
+    }
+    render_callvideo =()=>{
+        this.pc = new RTCPeerConnection(null);
+        this.pc.onicecandidate = (e) =>{
+            if(e.candidate)
+                console.log(JSON.stringify(e.candidate))
+        }
+        this.pc.oniceconnectionstatechange = (e)=>{
+            console.log(e)
+        }
+        this.pc.onaddstream = (e)=>{
+            this.remoteVideoref.current.srcObject = e.stream
+        }
+        const constraints = {video : true};
+        const succsess = (stream) =>{
+            this.localVideoref.current.srcObject = stream
+            this.pc.addStream(stream)
+        }
+        const failure = (e)=>{
+            console.log(" get video loi",e);
+        }
+        navigator.getUserMedia(constraints,succsess,failure)
+        
+        return(
+            <>
+                <div id="myBody">
+                    <div id="chat-container">
+                        <video ref={this.localVideoref} autoPlay></video>
+                    </div> 
+                </div>
+            </>
+        )
+    }
+    createOffer =()=>{
+        this.pc.createOffer({offerToReceiveVideo : -1})
+            .then(sdp =>{
+                console.log(JSON.stringify(sdp))
+                this.pc.setLocalDescription(sdp)
+            },e=>{})
+    }
+    setRemoteDescription = ()=>{
+        const desc = JSON.parse(this.textref.value);
+        this.pc.setRemoteDescription(new RTCSessionDescription(desc));
+    }
+    createAnswer = ()=>{
+        this.pc.createAnswer({offerToReceiveVideo: 1})
+            .then(sdp =>{
+                console.log(JSON.stringify(sdp))
+                this.pc.setLocalDescription(sdp)
+            },e =>{})
+    }
+    // chosseFile = ()=>{
+    //     const {current} = inputRef
+
+    // }
+    // click_OpenFile =()=>{
+    //     return(
+    //         <>
+    //             <input 
+    //                 className="attachment-logo"
+    //                 type = "file"
+    //                 ref={inputRef}
+    //             />
+    //         </>
+    //     )
+    // }
 	render_submitMessages =()=>{
         return(
             <>  
                 <form id="chat-form" onSubmit ={this.handleFormSubmit} >
-                    <div title="Add Attachment">
+                    <div title="Add Attachment" >
                             <AttachmentIcon />
                     </div>
                         <input 
@@ -510,16 +608,19 @@ class ChatShell extends React.Component{
     render(){
 		let submit_message;
         let title_message;
-        let render_AllMessage ;   
+        let render_AllMessage ;
         if(this.state.id_group != '' && this.state.isClick_Conversation_Group){
             render_AllMessage = this.renderAllMessagesGroup();
             title_message = this.render_chatTitle_Group();
             submit_message = this.render_submitMessages_group();
         }
-        else if(this.state.id_friend_conversation_click != '' && this.state.isClick_Conversation_Group == false){
+        else if((this.state.id_friend_conversation_click != '' && this.state.id_friend_conversation_click != null) && this.state.isClick_Conversation_Group == false){
             render_AllMessage = this.renderAllMessages();
             title_message = this.render_chatTitle_Friend();
             submit_message = this.render_submitMessages();
+        }
+        if(this.state.redirect == 1){
+            return this.render_callvideo();
         }
         return (
              <>

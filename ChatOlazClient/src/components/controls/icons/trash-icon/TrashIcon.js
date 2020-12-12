@@ -4,32 +4,7 @@ import './TrashIcon.scss';
 
 const TrashIcon = () => {
     return (
-        <svg className="trash-logo" enableBackground="new 0 0 500 500" version="1.1" viewBox="0 0 500 500" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-            <g>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="101.642" x2="120.633" y1="134.309" y2="430.972"/>
-                <path d="   M120.633,430.972c0,10.5,8.519,19.031,18.992,19.031" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="139.625" x2="360.389" y1="450.003" y2="450.003"/>
-                <path d="   M360.389,450.003c10.474,0,18.979-8.531,18.979-19.031" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <polyline fill="none" points="   379.367,430.972 398.386,134.309 101.642,134.309  " strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <path d="   M432.779,115.973c0,10.059-8.143,18.215-18.188,18.215" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="414.592" x2="85.409" y1="134.188" y2="134.188"/>
-                <path d="   M85.409,134.188c-10.018,0-18.188-8.156-18.188-18.215" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <path d="   M67.221,115.973c0-10.019,8.17-18.188,18.188-18.188" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="85.409" x2="414.592" y1="97.784" y2="97.784"/>
-                <path d="   M414.592,97.784c10.045,0,18.188,8.17,18.188,18.188" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="307.364" x2="307.364" y1="97.49" y2="68.988"/>
-                <path d="   M307.364,68.988c0-10.474-8.505-18.991-18.965-18.991" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="288.399" x2="211.628" y1="49.997" y2="49.997"/>
-                <path d="   M211.628,49.997c-10.487,0-18.979,8.518-18.979,18.991" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-                <polyline fill="none" points="   192.649,68.988 192.649,97.49 307.364,97.49  " strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10"/>
-            </g>
-            <g>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="166.332" x2="166.332" y1="172.278" y2="406.06"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="222.102" x2="222.102" y1="172.278" y2="406.06"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="277.926" x2="277.926" y1="172.278" y2="406.06"/>
-                <line fill="none" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="2.6131" strokeWidth="10" x1="333.669" x2="333.669" y1="172.278" y2="406.06"/>
-            </g>
-        </svg>
+        <svg className="trash-logo" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><g><path d="m80 318.053.001-124.109c.001-57.928 46.961-104.887 104.889-104.887h-60c-57.928 0-104.888 46.959-104.889 104.887l-.001 124.109c-.001 57.929 46.96 104.891 104.889 104.891h60c-57.929 0-104.89-46.962-104.889-104.891z" fill="#cee1f2"/><path d="m274 292.944c0 4.249-1.325 8.188-3.585 11.428-3.363 4.91-33.445 46.572-85.415 46.572s-82.052-41.662-85.415-46.572c-2.26-3.24-3.585-7.179-3.585-11.428 0-11.046 8.954-20 20-20 6.963 0 13.095 3.558 16.676 8.956 1.195 1.7 20.939 29.044 52.324 29.044s51.129-27.344 52.324-29.044c3.582-5.397 9.713-8.956 16.676-8.956 11.046 0 20 8.954 20 20zm63.422 113.42c16.433-16.434 27.723-36.642 33.06-58.667l67.646 41.278c15.166 9.333 33.5 9.719 49.046 1.032 15.545-8.686 24.826-24.504 24.826-42.313l-.003-182.803c-.001-17.808-9.282-33.625-24.828-42.312-15.544-8.685-33.88-8.3-49.046 1.033-.042.026-67.334 42.137-67.334 42.137-12.816-55.33-62.509-96.693-121.68-96.693h-124.218c-68.863 0-124.889 56.024-124.89 124.887l-.001 124.109c-.001 33.359 12.99 64.722 36.578 88.312 23.589 23.588 54.951 36.58 88.311 36.58h124.223c33.359 0 64.721-12.992 88.31-36.58zm-88.313-297.308c46.808 0 84.889 38.081 84.89 84.887v5.907c0 7.272 3.948 13.972 10.31 17.496 6.363 3.525 14.137 3.315 20.3-.542l94.526-59.155c3.664-2.228 6.91-1.054 8.523-.152 1.62.905 4.339 3.07 4.339 7.395l.003 182.803c0 4.324-2.719 6.489-4.339 7.395-1.619.906-4.889 2.085-8.634-.219l-94.609-57.732c-6.174-3.768-13.899-3.908-20.207-.369-6.307 3.539-10.211 10.208-10.211 17.44v3.843c0 22.675-8.829 43.993-24.863 60.026-16.033 16.034-37.351 24.864-60.025 24.864h-124.223c-22.675 0-43.992-8.83-60.025-24.864-16.035-16.033-24.864-37.351-24.864-60.026l.001-124.109c.001-46.807 38.082-84.888 84.89-84.888z" fill="#1428bf"/><path d="m121 180.944c13.807 0 25 11.193 25 25s-11.193 25-25 25-25-11.193-25-25 11.193-25 25-25zm106 25c0 13.807 11.193 25 25 25s25-11.193 25-25-11.193-25-25-25-25 11.192-25 25z" fill="#de5cee"/></g></svg>
     );
 }
 

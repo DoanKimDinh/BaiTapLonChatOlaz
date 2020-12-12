@@ -2,10 +2,6 @@ const express = require("express")
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
-
-
-
-const mysql = require("mysql")
 const { check, validationResult, query } = require("express-validator")
 const AWS_CONFIG = require("./config/config")
 const nodemailer = require('nodemailer')

@@ -9,7 +9,7 @@ import { faCheckSquare, faCoffee } from '@fortawesome/fontawesome-free-solid';
 import { Container, Row, Form, FormGroup, FormControl, Button, Table, Modal, InputGroup, ButtonGroup } from "react-bootstrap";
 import TrangChu,{socket} from '../../pages/TrangChu';
 import makeToast from "../../components/controls/toast/Toaster";
-
+import ip from '../../config/config'
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 );
@@ -34,7 +34,7 @@ const formValid = ({ formErrors, ...rest }) => {
 
   return valid;
 };
-var ipConfigg = 'http://localhost:3001';
+var ipConfigg = ip.PUBLIC_IP;
 class navBar extends React.Component {
   constructor(props) {
     super(props);
@@ -75,6 +75,7 @@ class navBar extends React.Component {
   }
   changeDangXuat = () => {
     localStorage.clear();
+    sessionStorage.clear();
     // props.xacThuc('', '');
   }
 
