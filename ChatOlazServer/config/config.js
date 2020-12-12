@@ -1,6 +1,6 @@
 const AWS_CONFIG = {
     REGION : 'us-east-2',
-    ACCESSID :'AKIATFTU6TDQLSPCBWUG',
-    SECRETKEY : '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'
+    ACCESSID :'',
+    SECRETKEY : ''
 }
 module.exports = AWS_CONFIG;

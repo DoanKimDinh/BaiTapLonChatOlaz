@@ -11,6 +11,8 @@ import TableScrollbar from 'react-table-scrollbar';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Redirect } from 'react-router-dom';
 import TrangChu,{socket} from './TrangChu';
+
+import ChatShell from "../containers/shell/ChatShell"
 var ReactDOM = require('react-dom');
 var ScrollArea = require('react-scrollbar');
 let groupMembers = []
@@ -45,9 +47,9 @@ class DanhBa extends React.Component {
       groups: [],
       members: "",
       friendsOutOfGroup: [],
-      idGroup: ""
+      idGroup: "",
+      redirect: 0
     };
-    // socket = require('socket.io-client')('http://localhost:3001');
     socket.on('connect',()=>{
         console.log("connect");
     });
@@ -335,7 +337,7 @@ class DanhBa extends React.Component {
         }
       })
   }
-  info = (email, sdt, ten, avatar) => {
+  info = (email, sdt, ten, avatar,id_friend) => {
     Swal.fire({
       // timer: 3000,
       imageUrl: ipConfigg + '/api/files/' + avatar,
@@ -343,6 +345,40 @@ class DanhBa extends React.Component {
       imageWidth: 200,
       imageAlt: avatar,
       html: 'Ten: ' + ten + '<br/>SDT: ' + sdt + '<br/>Email: ' + email,
+      confirmButtonText: "Nhắn tin",
+      showCancelButton: true
+    }).then((result)=>{
+      if(result.isConfirmed){
+        // xoa du lieu truoc
+        sessionStorage.clear();
+        sessionStorage.setItem("id_friend_sendMessages",id_friend)
+        sessionStorage.setItem("ten_friend_sendMessages",ten)
+        sessionStorage.setItem("avatar_friend_sendMessages",avatar)
+        this.setState({
+            redirect: 1
+        })
+      }
+    })
+  }
+  info_group = (ten,avatar,id_group) => {
+    Swal.fire({
+      // timer: 3000,
+      imageUrl: require("../images/img/users.jpg"),
+      imageHeight: 200,
+      imageWidth: 200,
+      imageAlt: avatar,
+      html: 'Ten: ' + ten  ,
+      confirmButtonText: "Nhắn tin",
+      showCancelButton: true
+    }).then((result)=>{
+      if(result.isConfirmed){
+        sessionStorage.clear();
+        sessionStorage.setItem("id_group_sendMessages",id_group)
+        sessionStorage.setItem("ten_group_sendMessages",ten)
+        this.setState({
+            redirect: 1
+        })
+      }
     })
   }
   openModal = () => this.setState({ isOpen: true });
@@ -558,6 +594,9 @@ class DanhBa extends React.Component {
     if (localStorage.getItem('dangnhap') === null) {
       return <Redirect to={'/'} />
     }
+    if(this.state.redirect == 1){
+      return <Redirect to={'/tin-nhan'}/>
+    }
     return (
       <>
         <div>
@@ -603,7 +642,7 @@ class DanhBa extends React.Component {
                               if (this.state.booleanFriend == "banbe") {
                                 return (
                                   <tr>
-                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar)} /><span id="tenFriend">{item.ten} (ban be)</span></td>
+                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar,item.id)} /><span id="tenFriend">{item.ten} (ban be)</span></td>
                                     <td><i class="fas fa-user-friends fa-2x" onClick={() => this.handleUnfriend(this.state.id, item.id)} style={{ color: "green" }} title="Đã là bạn bè của nhau" /></td>
                                   </tr>
                                 );
@@ -611,7 +650,7 @@ class DanhBa extends React.Component {
                               else if (this.state.booleanFriend == "xacnhan") {
                                 return (
                                   <tr>
-                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar)} /><span id="ten">{item.ten} (Xac nhan)</span></td>
+                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar,item.id)} /><span id="ten">{item.ten} (Xac nhan)</span></td>
                                     <td><i class="fas fa-thumbs-up fa-2x" onClick={() => this.handleAccessFriend(this.state.id, item.id)} style={{ color: "green" }} title="Xác nhận bạn bè đi" /></td>
                                   </tr>
                                 );
@@ -619,7 +658,7 @@ class DanhBa extends React.Component {
                               else if (this.state.booleanFriend == "yeucau") {
                                 return (
                                   <tr>
-                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar)} /><span id="tenFriend">{item.ten} (Them ban)</span></td>
+                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar,item.id)} /><span id="tenFriend">{item.ten} (Them ban)</span></td>
                                     <td><i class="fas fa-user-plus fa-2x" style={{ color: "green" }} onClick={() => this.handleAddFriend(this.state.id, item.id)} title="hãy gửi yêu cầu kết bạn" /></td>
                                   </tr>
                                 );
@@ -627,7 +666,7 @@ class DanhBa extends React.Component {
                               else if (this.state.booleanFriend == "da gui yeu cau") {
                                 return (
                                   <tr>
-                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar)} /><span id="tenFriend">{item.ten} (Da gui yeu cau)</span></td>
+                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar,item.id)} /><span id="tenFriend">{item.ten} (Da gui yeu cau)</span></td>
                                     <td><i class="fas fa-check-circle fa-2x" onClick={() => this.handleCancelFriend(item.id, this.state.id)} style={{ color: "green" }} title="Đã gửi yêu cầu kết bạn" /></td>
                                   </tr>
                                 );
@@ -657,7 +696,7 @@ class DanhBa extends React.Component {
                               items.friends.map((item) => {
                                 return (
                                   <tr>
-                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
+                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend,item.idFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
                                     <td><i class="fas fa-times-circle fa-2x" style={{ color: "red" }} onClick={() => this.handleUnfriend(items.id, item.idFriend)} title="unfriend" /></td>
                                   </tr>
                                 );
@@ -680,7 +719,7 @@ class DanhBa extends React.Component {
                               items.friends.map((item) => {
                                 return (
                                   <tr>
-                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
+                                    <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend,item.idFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
                                     <td><i class="fas fa-times-circle fa-2x" style={{ color: "red" }} onClick={() => this.handleCancelFriend(items.id, item.idFriend)} title="not accept" /></td>
                                     <td><i class="fas fa-plus-circle fa-2x" style={{ color: "green" }} onClick={() => this.handleAccessFriend(items.id, item.idFriend)} title="accept friend" /></td>
                                   </tr>
@@ -703,13 +742,14 @@ class DanhBa extends React.Component {
                           {this.state.groups.map((items) => {
                             return (
                               <tr>
+                                <td ><img src={require("../images/img/users.jpg")} onClick={() => this.info_group(items.group_name,items.id)} /></td>            
                                 <td style={{ width: "45%" }}><span id="tenFriend">{items.group_name}</span></td>
                                 <td style={{ width: "35%" }} >
-                                  <div class="row row-horizon">
+                                  <div class="row row-horizon"> 
                                     {items.group_members.map((item) => {
                                       return (
                                         <div class="col-sm-3">
-                                          <img src={ipConfigg + "/api/files/" + item.avatarUser} onClick={() => this.info(item.emailUser, item.sdtUser, item.tenUser, item.avatarUser)} />
+                                          <img src={ipConfigg + "/api/files/" + item.avatarUser} onClick={() => this.info(item.emailUser, item.sdtUser, item.tenUser, item.avatarUser,item.idUser)} />
                                         </div>
                                       );
                                     })}
@@ -772,7 +812,7 @@ class DanhBa extends React.Component {
                             items.friends.map((item) => {
                               return (
                                 <tr>
-                                  <td style={{ width: "80%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
+                                  <td style={{ width: "80%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend,item.idFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
                                   <td><i class="fas fa-times-circle fa-2x" style={{ color: "red" }} onClick={() => this.handleRemoveFriendFromMemberListForGroup(item.idFriend, item.tenFriend)} title="xóa bạn khỏi group chat" /></td>
                                   <td><i class="fas fa-plus-circle fa-2x" style={{ color: "green" }} onClick={() => this.handleAddFriendToGroup(item.idFriend, item.tenFriend)} title="thêm bạn vào group chat" /></td>
                                 </tr>
@@ -822,7 +862,7 @@ class DanhBa extends React.Component {
                         {this.state.friendsOutOfGroup.map((item) => {
                           return (
                             <tr>
-                              <td style={{ width: "80%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
+                              <td style={{ width: "80%" }}><img src={ipConfigg + "/api/files/" + item.avatarFriend} onClick={() => this.info(item.emailFriend, item.sdtFriend, item.tenFriend, item.avatarFriend,item.idFriend)} /><span id="tenFriend">{item.tenFriend}</span></td>
                               <td><i class="fas fa-times-circle fa-2x" style={{ color: "red" }} onClick={() => this.handleRemoveFriendFromMemberListForGroup(item.idFriend, item.tenFriend)} title="xóa bạn khỏi group chat" /></td>
                               <td><i class="fas fa-plus-circle fa-2x" style={{ color: "green" }} onClick={() => this.handleAddFriendToGroup(item.idFriend, item.tenFriend)} title="thêm bạn vào group chat" /></td>
                             </tr>
