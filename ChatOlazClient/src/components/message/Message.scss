@@ -19,7 +19,7 @@ $speech-bubble-border-color: darken($accent-color, 13.18);
         }
         
         > .message-time {
-            font-size: 1.3rem;
+            font-size: 1rem;
             color: $message-time-color;
         }
         
@@ -35,7 +35,8 @@ $speech-bubble-border-color: darken($accent-color, 13.18);
 
         > .message-content {
             justify-items: end;
-
+            grid-template-columns: 1fr 48px;
+            grid-column-gap: 15px;
             > .message-text {
                 background: $primary-color;
                 color: $contrasted-primary-text;
@@ -51,7 +52,7 @@ $speech-bubble-border-color: darken($accent-color, 13.18);
         > .message-content {
             grid-template-columns: 48px 1fr;
             grid-column-gap: 15px;
-
+            justify-items: start;
             > .message-text {
                 background: $accent-color;
                 color: $contrasted-accent-text;

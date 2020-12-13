@@ -16,3 +16,10 @@ $chat-shell-background: lighten($accent-color, 65%);
   background: $chat-shell-background;
   border-radius: 10px;
 }
+#messageImage{
+  width: 250px;
+  height: 250px;
+  border-radius: 0;
+  background: white;
+  padding: 0;
+}
