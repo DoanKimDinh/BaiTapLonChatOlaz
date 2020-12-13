@@ -14,6 +14,7 @@ class TinNhan extends Component {
     return(
       <>
         <ChatShell/>
+        <Footer />
       </>
     )
   }

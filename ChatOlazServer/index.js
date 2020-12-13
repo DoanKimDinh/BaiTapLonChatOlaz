@@ -79,9 +79,9 @@ doUpload = (req, res) => {
     }
     s3Client.upload(params, (err, data) => {
         if (err) {
-            res.status(500).json({ error: "Error -> " + err });
+            return res.json({success: false, err})
         }
-        res.json({ message: 'File uploaded successfully! -> keyname = ' + req.file.originalname });
+        return res.json({ success: true, url : res.req.file.path, fileName : res.req.file.originalname });
     });
 }
 doDownload = (req, res) => {
