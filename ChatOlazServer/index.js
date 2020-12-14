@@ -724,7 +724,8 @@ app.post('/api/dangky',
                 "admin": admin,
                 "friends": [],
                 "friend_requests": [],
-                "avatar": avatar
+                "avatar": avatar,
+                "messages": []
             }
         }
         docClient.put(params_add, (err, data) => {
