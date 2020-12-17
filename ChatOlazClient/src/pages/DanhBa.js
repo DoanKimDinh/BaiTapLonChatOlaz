@@ -360,13 +360,13 @@ class DanhBa extends React.Component {
       }
     })
   }
-  info_group = (ten,avatar,id_group) => {
+  info_group = (ten,id_group) => {
     Swal.fire({
       // timer: 3000,
       imageUrl: require("../images/img/users.jpg"),
       imageHeight: 200,
       imageWidth: 200,
-      imageAlt: avatar,
+      imageAlt: require("../images/img/users.jpg"),
       html: 'Ten: ' + ten  ,
       confirmButtonText: "Nhắn tin",
       showCancelButton: true

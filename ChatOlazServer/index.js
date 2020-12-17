@@ -127,7 +127,7 @@ app.get('/api/get', (req, res) => {
         }
     })
 });
-app.get('/api/getUser', (req, res) => {
+app.post('/api/getUser', (req, res) => {
     const id = req.body.id;
     const params = {
         TableName: "UserOlaz",
@@ -139,15 +139,15 @@ app.get('/api/getUser', (req, res) => {
     docClient.scan(params, (error, data) => {
         if (error)
             res.send(error);
-        if ([...data.Items].length <= 0) {
+     //   if ([...data.Items].length > 0) {
             // return res.json({ msg: data.Items });
-            res.send(JSON.stringify({ response: data }))
-        }
+        else
+            res.send(JSON.stringify({ response: data.Items }))
+     //   }
     });
 });
 app.post('/api/friends', (req, res) => {
     const id = req.body.id;
-    console.log("id da nhan duoc " +id);
     const params_scan = {
         TableName: "UserOlaz",
         FilterExpression: "id = :id",
@@ -724,8 +724,8 @@ app.post('/api/dangky',
                 "admin": admin,
                 "friends": [],
                 "friend_requests": [],
-                "avatar": avatar,
-                "messages": []
+                "messages": [],
+                "avatar": avatar
             }
         }
         docClient.put(params_add, (err, data) => {
@@ -1094,7 +1094,6 @@ app.post("/api/timKiemFriend", async (req, res) => {
     let bientam = 0;
 
     ten.forEach((item) => {
-        console.log("doan kim dinh" + item)
         item.friends.forEach((ele) => {
             //  console.log("doan kim dinh")
             //  console.log(ele.idFriend + ele.trangThaiFriend+ma)

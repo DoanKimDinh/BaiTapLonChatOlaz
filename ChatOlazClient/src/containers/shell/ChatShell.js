@@ -90,8 +90,17 @@ class ChatShell extends React.Component {
     }
     componentDidMount() {
         this.fetchAllFriends();
+        this.fetchAllMessages();
         this.fetchAllGroups();
-        this.ClickCoversation(this.state.id_friend_conversation_click, this.state.ten_friend_conversation_click, this.state.vartar_friend)
+        if(this.state.id_group_conversation_click != null){
+            this.SetMessagesOnRender_Group();
+            this.setState({
+                isClick_Conversation_Group: true
+            })
+        }
+        else {
+            this.SetMessagesOnRender_Friend()
+        }
     }
     handleChange = (evt) => {
         evt.preventDefault();
@@ -108,10 +117,10 @@ class ChatShell extends React.Component {
         };
         const body = JSON.stringify({ id: id });
         axios
-            .post(ipConfigg + '/api/friends', body, config)
+            .post(ipConfigg + '/api/getUser', body, config)
             .then((res) => {
                 this.setState({
-                    friends: res.data.response
+                    friends: res.data.response,
                 });
             })
     };
@@ -126,7 +135,7 @@ class ChatShell extends React.Component {
         const body = JSON.stringify({ id: id_friend_click });
         var other_message = [];
         axios
-            .post(ipConfigg + '/api/friends', body, config)
+            .post(ipConfigg + '/api/getUser', body, config)
             .then((res) => {
                 this.setState({
                     info_friend_conversation: res.data.response
@@ -185,7 +194,6 @@ class ChatShell extends React.Component {
                 this.setState({
                     groups: res.data.response
                 });
-                console.log(res.data.response);
             })
     };
     fetchAll_MyMessages = () => {
@@ -210,7 +218,7 @@ class ChatShell extends React.Component {
         this.setState({
             list_all_messages: mang_rong
         })
-        this.fetchAllFriends()
+      //  this.fetchAllFriends()
         this.fetchAllMessages()
         this.fetchAll_OtherMessage(id_friend)
         var my_message = [];
@@ -231,6 +239,46 @@ class ChatShell extends React.Component {
             isClick_Conversation_Group: false
         })
     }
+    // set tin nhan khi render friend tu danh ba
+    SetMessagesOnRender_Friend = () =>{
+        const { id } = this.state;
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const body = JSON.stringify({ id: id });
+        axios
+            .post(ipConfigg + '/api/getUser', body, config)
+            .then((res) => {
+                this.setState({
+                    friends: res.data.response
+                });
+                var allMessage = [];
+                this.state.friends.map((item) => {
+                    item.messages.map((message) => {
+                        allMessage.push(message);
+                    })
+                })
+                this.setState({
+                    list_all_messageByUser: allMessage
+                })
+                this.fetchAll_OtherMessage(this.state.id_friend_conversation_click)
+                var my_message = [];
+                this.state.friends.map((items) => {
+                    items.messages.map((message) => {
+                        if (message.id_toFriend == this.state.id_friend_conversation_click) {
+                            my_message.push(message)
+                        }
+                    })
+                });
+                // luu lai id
+                id_conversation_click = this.state.id_friend_conversation_click;
+                this.setState({
+                    isClick_Conversation_Group: false
+                })
+            })
+    }
     fetchAll_MessageGroup = (id_group) => {
         var all_message_group = [];
         for (var i = 0; i < this.state.groups.length; i++) {
@@ -243,13 +291,57 @@ class ChatShell extends React.Component {
         all_message_group.sort((a, b) => {
             return new Date(a.date).getTime() - new Date(b.date).getTime()
         });
+         console.log("gia tri "+ this.state.groups.length)
         this.setState({
             list_all_messages: all_message_group.reverse(),
         })
     }
+    // set tin nhan cho group khi render tu o tin nhan
+    SetMessagesOnRender_Group = () =>{
+        const { id } = this.state;
+        var groups_tam = []
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const body = JSON.stringify({ id: id });
+        axios
+            .post(ipConfigg + '/api/groups', body, config)
+            .then((res) => {
+                groups_tam = groups_tam.concat(res.data.response)
+                this.setState({
+                    groups: res.data.response
+                });
+                 /////
+                var all_message_group = [];
+                for (var i = 0; i < groups_tam.length; i++) {
+                    if (groups_tam[i].id == this.state.id_group_conversation_click) {
+                        if (groups_tam[i].id.length > 0)
+                            all_message_group = all_message_group.concat(groups_tam[i].messages)
+                        break;
+                    }
+                }
+                all_message_group.sort((a, b) => {
+                    return new Date(a.date).getTime() - new Date(b.date).getTime()
+                });
+                groups_tam.map((item)=>{
+                    console.log("messages " +item.id)
+                })
+                this.setState({
+                    list_all_messages: all_message_group.reverse(),
+                })
+            })
+    }
     // bat su kien khi click vao 1 group 
     ClickConversation_Group = (id_group, ten_group, avatarGroup) => {
+        // set lai mang rong cho tin nhan
+        var mang_rong = [];
+        this.setState({
+            list_all_messages: mang_rong
+        })
         this.fetchAllGroups();
+        console.log("gia tri "+ this.state.groups.length)
         this.fetchAll_MessageGroup(id_group);
         this.setState({
             ten_group: ten_group,
@@ -648,9 +740,9 @@ class ChatShell extends React.Component {
             const message_submit = {
                 id: this.state.id,
                 date: new Date(),
-                id_group: '',
+                ten_friend: this.state.ten_friend_conversation_click,
                 id_toFriend: this.state.id_friend_conversation_click,
-                isMessageGroup: false,
+                avatar_friend: this.state.vartar_friend,
                 messageText: this.state.message_send,
                 thoi_gian: ngay_gio,
                 trang_thai: 1
@@ -754,9 +846,9 @@ class ChatShell extends React.Component {
             const message_submit = {
                 id: this.state.id,
                 date: new Date(),
-                id_group: '',
+                ten_friend: this.state.ten_friend_conversation_click,
                 id_toFriend: this.state.id_friend_conversation_click,
-                isMessageGroup: false,
+                avatar_friend: this.state.vartar_friend,
                 messageText: this.state.message_send,
                 thoi_gian: ngay_gio,
                 trang_thai: 1
@@ -865,21 +957,6 @@ class ChatShell extends React.Component {
                 this.pc.setLocalDescription(sdp)
             }, e => { })
     }
-    // chosseFile = ()=>{
-    //     const {current} = inputRef
-
-    // }
-    // click_OpenFile =()=>{
-    //     return(
-    //         <>
-    //             <input 
-    //                 className="attachment-logo"
-    //                 type = "file"
-    //                 ref={inputRef}
-    //             />
-    //         </>
-    //     )
-    // }
     render_submitMessages = () => {
         return (
             <>
