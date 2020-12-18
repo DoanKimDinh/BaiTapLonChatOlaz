@@ -6,7 +6,7 @@ const { check, validationResult, query } = require("express-validator")
 const AWS_CONFIG = require("./config/config")
 const nodemailer = require('nodemailer')
 const otpGenerator = require('otp-generator')
-const BUCKET = 'olaz-user'
+const BUCKET = 'olaz-user2'
 const { v1: uuidv1 } = require('uuid')
 const AWS = require('aws-sdk')
 const jwt = require("jwt-then")
@@ -1070,9 +1070,10 @@ app.post("/api/timKiemFriend", async (req, res) => {
 
     const params = {
         TableName: "UserOlaz",
-        FilterExpression: "sdt = :sdt",
+        FilterExpression: "sdt = :sdt and admin = :admin",
         ExpressionAttributeValues: {
-            ":sdt": timkiem
+            ":sdt": timkiem,
+            ":admin":0
         },
     };
     var ten = await getByIdUser(req.body.id);
@@ -1088,9 +1089,10 @@ app.post("/api/timKiemFriend", async (req, res) => {
     if (giatri3.Items == "") {
         paramsEmail = {
             TableName: "UserOlaz",
-            FilterExpression: "email = :email",
+            FilterExpression: "email = :email and admin = :admin",
             ExpressionAttributeValues: {
-                ":email": timkiem
+                ":email": timkiem,
+                ":admin":0
             },
         };
         giatri3 = await docClient.scan(paramsEmail, (error2, data2) => {
