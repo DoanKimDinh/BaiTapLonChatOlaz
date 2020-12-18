@@ -437,6 +437,26 @@ app.post('/api/kiemTraTrungEmail', (req, res) => {
         }
     });
 });
+app.post('/api/kiemTraTrungSDT', (req, res) => {
+    const sdt = req.body.sdt;
+    const params = {
+        TableName: "UserOlaz",
+        FilterExpression: "sdt = :sdt",
+        ExpressionAttributeValues: {
+            ":sdt": sdt
+        },
+    };
+    docClient.scan(params, (error, data) => {
+        if (error)
+            res.send(error);
+        else if ([...data.Items].length <= 0) {
+            return res.json({ msg: "false" });
+        }
+        else if ([...data.Items].length > 0) {
+            return res.json({ msg: "true" });
+        }
+    });
+});
 app.post('/api/getUserByEmailAndPass', (req, res) => {
     const email = req.body.email;
     const pass = req.body.pass;
