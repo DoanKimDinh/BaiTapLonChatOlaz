@@ -771,25 +771,7 @@ class ChatShell extends React.Component {
     // for OnMyDrop
     handleFormSubmitFiles = () => {
         const {message_send} = this.state
-        if (message_send != "" && 
-            message_send.substring(message_send.length - 4, message_send.length) != '.rar' && 
-            message_send.substring(message_send.length - 4, message_send.length) != '.jpg' && 
-            message_send.substring(message_send.length - 4, message_send.length) != '.png' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.mp3' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.mp4' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.docx' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.xlsx' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.pttx' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.txt' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.JPG' && 
-            message_send.substring(message_send.length - 4, message_send.length) != '.RAR' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.PNG' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.MP3' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.MP4' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.DOCX' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.XLSX' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.PTTX' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.TXT') {
+        if (message_send != "") {
             var toDay = new Date();
             var ngay_gio = toDay.getDate() + "/" + (toDay.getMonth() + 1) + "/" + toDay.getFullYear() + " " + toDay.getHours() + ":" + toDay.getMinutes() + ":" + toDay.getSeconds() + "s";
             const message_submit = {
@@ -835,25 +817,7 @@ class ChatShell extends React.Component {
     // for OnMyDrop
     handleFormSubmit_groupFiles = () => {
         const {message_send} = this.state
-        if (message_send != "" && 
-            message_send.substring(message_send.length - 4, message_send.length) != '.rar' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.jpg' && 
-            message_send.substring(message_send.length - 4, message_send.length) != '.png' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.mp3' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.mp4' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.docx' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.xlsx' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.pttx' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.txt' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.JPG' && 
-            message_send.substring(message_send.length - 4, message_send.length) != '.PNG' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.MP3' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.MP4' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.DOCX' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.XLSX' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.RAR' &&
-            message_send.substring(message_send.length - 5, message_send.length) != '.PTTX' &&
-            message_send.substring(message_send.length - 4, message_send.length) != '.TXT') {
+        if (message_send != "") {
             var toDay = new Date();
             var ngay_gio = toDay.getDate() + "/" + (toDay.getMonth() + 1) + "/" + toDay.getFullYear() + " " + toDay.getHours() + ":" + toDay.getMinutes() + ":" + toDay.getSeconds() + "s";
             const message_submit = {
