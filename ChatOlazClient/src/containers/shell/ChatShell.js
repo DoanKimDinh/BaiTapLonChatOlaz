@@ -411,7 +411,9 @@ class ChatShell extends React.Component {
                 {list_all_messages.map((items) => {
                     if (items.id_member == this.state.id) {
                         if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.jpg' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.JPG' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.PNG') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -424,7 +426,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4' ||
+                                items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP4') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -437,7 +440,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3' || 
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP3') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -457,7 +461,12 @@ class ChatShell extends React.Component {
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.docx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.xlsx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.pttx' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.RAR' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.DOCX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.XLSX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.PTTX' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.TXT') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -486,7 +495,9 @@ class ChatShell extends React.Component {
                     }
                     else {
                         if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.jpg' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.JPG' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.PNG') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -499,7 +510,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4'||
+                                items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP4') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -512,7 +524,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3'|| 
+                                items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP3') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -532,7 +545,12 @@ class ChatShell extends React.Component {
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.docx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.xlsx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.pttx' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.RAR' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.DOCX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.XLSX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.PTTX' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.TXT') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -580,7 +598,9 @@ class ChatShell extends React.Component {
                 {list_all_messages.map((items) => {
                     if (items.id_toFriend == id_friend_conversation_click) {
                         if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.jpg' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.JPG' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.PNG') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -593,7 +613,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4' ||
+                                items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP4') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -606,7 +627,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3' ||
+                                items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP3') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -626,7 +648,12 @@ class ChatShell extends React.Component {
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.docx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.xlsx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.pttx' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.RAR' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.DOCX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.XLSX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.PTTX' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.TXT') {
                             return (
                                 <div className={messageClass_My}>
                                     <div className="message-content">
@@ -655,7 +682,9 @@ class ChatShell extends React.Component {
                     }
                     else if (items.id_toFriend != id_friend_conversation_click) {
                         if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.jpg' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.png' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.JPG' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.PNG') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -668,7 +697,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp4' ||
+                                items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP4') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -681,7 +711,8 @@ class ChatShell extends React.Component {
                                 </div>
                             )
                         }
-                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3') {
+                        else if (items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.mp3' ||
+                                items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.MP3') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -701,7 +732,12 @@ class ChatShell extends React.Component {
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.docx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.xlsx' ||
                             items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.pttx' ||
-                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt') {
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.txt' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.RAR' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.DOCX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.XLSX' ||
+                            items.messageText.substring(items.messageText.length - 5, items.messageText.length) === '.PTTX' ||
+                            items.messageText.substring(items.messageText.length - 4, items.messageText.length) === '.TXT') {
                             return (
                                 <div className={messageClass_Other}>
                                     <div className="message-content">
@@ -734,7 +770,26 @@ class ChatShell extends React.Component {
     }
     // for OnMyDrop
     handleFormSubmitFiles = () => {
-        if (this.state.message_send != "") {
+        const {message_send} = this.state
+        if (message_send != "" && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.rar' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.jpg' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.png' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp4' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.docx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.xlsx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.pttx' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.txt' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.JPG' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.RAR' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.PNG' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP4' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.DOCX' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.XLSX' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.PTTX' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.TXT') {
             var toDay = new Date();
             var ngay_gio = toDay.getDate() + "/" + (toDay.getMonth() + 1) + "/" + toDay.getFullYear() + " " + toDay.getHours() + ":" + toDay.getMinutes() + ":" + toDay.getSeconds() + "s";
             const message_submit = {
@@ -779,7 +834,26 @@ class ChatShell extends React.Component {
     };
     // for OnMyDrop
     handleFormSubmit_groupFiles = () => {
-        if (this.state.message_send != "") {
+        const {message_send} = this.state
+        if (message_send != "" && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.rar' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.jpg' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.png' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp4' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.docx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.xlsx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.pttx' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.txt' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.JPG' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.PNG' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP4' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.DOCX' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.XLSX' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.RAR' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.PTTX' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.TXT') {
             var toDay = new Date();
             var ngay_gio = toDay.getDate() + "/" + (toDay.getMonth() + 1) + "/" + toDay.getFullYear() + " " + toDay.getHours() + ":" + toDay.getMinutes() + ":" + toDay.getSeconds() + "s";
             const message_submit = {
@@ -840,7 +914,27 @@ class ChatShell extends React.Component {
     }
     handleFormSubmit = (e) => {
         e.preventDefault();
-        if (this.state.message_send != "") {
+        const {message_send} = this.state
+        if (message_send != "" && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.rar' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.jpg' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.png' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp4' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.docx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.xlsx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.pttx' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.txt' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.JPG' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.PNG' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP4' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.RAR' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.DOCX' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.XLSX' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.PTTX' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.TXT'
+                ) {
             var toDay = new Date();
             var ngay_gio = toDay.getDate() + "/" + (toDay.getMonth() + 1) + "/" + toDay.getFullYear() + " " + toDay.getHours() + ":" + toDay.getMinutes() + ":" + toDay.getSeconds() + "s";
             const message_submit = {
@@ -890,7 +984,6 @@ class ChatShell extends React.Component {
             </div>
         )
     }
-
     render_chatTitle_Group = () => {
         return (
             <div id="chat-title">
@@ -988,7 +1081,26 @@ class ChatShell extends React.Component {
     //
     handleFormSubmit_group = (e) => {
         e.preventDefault();
-        if (this.state.message_send != "") {
+        const {message_send} = this.state
+        if (message_send != "" && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.jpg' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.rar' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.png' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.mp4' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.docx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.xlsx' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.pttx' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.txt' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.JPG' && 
+            message_send.substring(message_send.length - 4, message_send.length) != '.PNG' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP3' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.RAR' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.MP4' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.DOCX' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.XLSX' &&
+            message_send.substring(message_send.length - 5, message_send.length) != '.PTTX' &&
+            message_send.substring(message_send.length - 4, message_send.length) != '.TXT') {
             var toDay = new Date();
             var ngay_gio = toDay.getDate() + "/" + (toDay.getMonth() + 1) + "/" + toDay.getFullYear() + " " + toDay.getHours() + ":" + toDay.getMinutes() + ":" + toDay.getSeconds() + "s";
             const message_submit = {

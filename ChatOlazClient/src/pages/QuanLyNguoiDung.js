@@ -96,6 +96,7 @@ class QuanLyNguoiDung extends React.Component {
 	componentWillMount() {
 		this.fetchAllUsers();
 	}
+
 	// add user
 	addUser = (evt) => {
 		evt.preventDefault();
@@ -106,33 +107,59 @@ class QuanLyNguoiDung extends React.Component {
 					"Content-Type": "application/json",
 				},
 			};
-			axios.post(ipConfigg + "/api/insert", body, config)
+			axios
+				.post(ipConfigg + `/api/kiemTraTrungSDT`, body, config)
 				.then((res) => {
-					if (res.data.msg == "false") {
+					if (res.data.msg == "true") {
 						Swal.fire(
 							'Đăng Ký!',
-							'Bạn đã đăng ký thất bại. SDT hoặc Email đã được sử dụng.',
+							'Bạn đã đăng ký thất bại. SDT đã được sử dụng.',
 							'error'
 						)
 					}
-					else if (res.data.msg == "true") {
-						this.setState({
-							ten: "",
-							sdt: "",
-							email: "",
-							pass: "12345678",
-							tinhtrang: true,
-							admin: false,
-						});
-						Swal.fire(
-							'Đã Thêm!',
-							'Bạn đã thêm 1 thành viên.',
-							'success'
-						)
-						// this.closeModal();
-						this.fetchAllUsers();
+					else if (res.data.msg == "false") {
+						axios
+							.post(ipConfigg + `/api/kiemTraTrungEmail`, body, config)
+							.then((res) => {
+								if (res.data.msg == "true") {
+									Swal.fire(
+										'Đăng Ký!',
+										'Bạn đã đăng ký thất bại. Email đã được sử dụng.',
+										'error'
+									)
+								}
+								else if (res.data.msg == "false") {
+									axios.post(ipConfigg + "/api/insert", body, config)
+										.then((res) => {
+											if (res.data.msg == "false") {
+												Swal.fire(
+													'Đăng Ký!',
+													'Bạn đã đăng ký thất bại. SDT hoặc Email đã được sử dụng.',
+													'error'
+												)
+											}
+											else if (res.data.msg == "true") {
+												this.setState({
+													ten: "",
+													sdt: "",
+													email: "",
+													pass: "12345678",
+													tinhtrang: true,
+													admin: false,
+												});
+												Swal.fire(
+													'Đã Thêm!',
+													'Bạn đã thêm 1 thành viên.',
+													'success'
+												)
+												this.closeModal();
+												this.fetchAllUsers();
+											}
+										});
+								}
+							})
 					}
-				});
+				})
 		}
 		else {
 			console.log(this.state);
