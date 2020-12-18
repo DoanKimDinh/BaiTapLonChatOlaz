@@ -8,12 +8,44 @@ import { BrowserRouter as Redirect } from 'react-router-dom';
 import Swal from 'sweetalert2/dist/sweetalert2.js' // npm install --save sweetalert2
 import 'sweetalert2/src/sweetalert2.scss' // npm install node-sass
 import { Tabs, Tab } from "react-bootstrap";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import firebase from "firebase";
 var ma_otp = "";
 var email_save = "", sdt_save = "";
 var id_tim = "";
 const IP = require('../config/config')
 var ipConfigg = IP.PUBLIC_IP;
 
+const firebaseConfig = {
+    apiKey: "AIzaSyD1mCb2fgR7kjMNKEcDUSG-j96CxrIYbgo",
+    authDomain: "olaz-veri-phone.firebaseapp.com",
+    databaseURL: "https://olaz-veri-phone.firebaseio.com",
+    projectId: "olaz-veri-phone",
+    storageBucket: "olaz-veri-phone.appspot.com",
+    messagingSenderId: "709590135743",
+    appId: "1:709590135743:web:eccdbaae6185d613f8670a",
+    measurementId: "G-4V10QY92F9"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+firebase.auth().languageCode = 'it';
+
+// window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+// window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+//     'size': 'normal',
+//     'callback': function (response) {
+//         // reCAPTCHA solved, allow signInWithPhoneNumber.
+//         // ...
+//         recaptchaVerifier.render().then(function(widgetId) {
+//             window.recaptchaWidgetId = widgetId;
+//           });
+//     },
+//     'expired-callback': function () {
+//         // Response expired. Ask user to solve reCAPTCHA again.
+//         // ...
+//     }
+// });
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 );
@@ -57,10 +89,13 @@ class Singin extends React.Component {
                 email: "",
                 pass: "",
                 pass_xacnhan: ""
-            }
+            },
+            phone: "",
+            tam: ''
         };
+        this.handleSetRidirectToTwo.bind(this);
+        this.handleSetRidirectToFour.bind(this);
     }
-
     handleChange = e => {
         e.preventDefault();
         const { pass } = this.state;
@@ -225,19 +260,13 @@ class Singin extends React.Component {
         const body = JSON.stringify({ email });
         if (this.state.email != "") {
             if (formValid(this.state)) {
-
-                const config = {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                };
                 axios
                     .post(ipConfigg + `/api/kiemTraTrungEmail`, body, config)
                     .then((res) => {
                         if (res.data.msg == "true") {
                             Swal.fire(
                                 'Đăng Ký!',
-                                'Bạn đã đăng ký thất bại. SDT hoặc Email đã được sử dụng.',
+                                'Bạn đã đăng ký thất bại. Email đã được sử dụng.',
                                 'error'
                             )
                         }
@@ -263,7 +292,121 @@ class Singin extends React.Component {
         }
 
     };
-
+    handleClick = () => {
+        var recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
+        var number = this.state.sdt;
+        firebase.auth().signInWithPhoneNumber(number, recaptcha).then(function (e) {
+            var code = prompt('Enter the otp', '');
+            if (code === null) return;
+            e.confirm(code).then(function (result) {
+                console.log(result.user);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged((user) => console.log(user));
+    }
+    checkTrungSDT = (evt) => {
+        evt.preventDefault();
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+        const { sdt } = this.state;
+        const body = JSON.stringify({ sdt });
+        if (this.state.sdt != "") {
+            if (formValid(this.state)) {
+                axios
+                    .post(ipConfigg + `/api/kiemTraTrungSDT`, body, config)
+                    .then((res) => {
+                        if (res.data.msg == "true") {
+                            Swal.fire(
+                                'Đăng Ký!',
+                                'Bạn đã đăng ký thất bại. SDT đã được sử dụng.',
+                                'error'
+                            )
+                        }
+                        else if (res.data.msg == "false") {
+                            Swal.fire(
+                                'Xác Thực!',
+                                'Mã xác thực đã gởi đến SDT của bạn!!!',
+                                'success'
+                            )
+                            this.onSignInSubmit()
+                        }
+                    })
+            }
+        }
+        else {
+            Swal.fire(
+                'Lỗi!',
+                'Không được để trống email!',
+                'error'
+            )
+        }
+    }
+    handleSetRidirectToFour () {
+        this.setState({
+            redirect: 4
+        });
+    }
+    handleSetRidirectToTwo(){
+        this.setState({
+            redirect: 2
+        });
+    }
+    setUpRecaptcha = () => {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            "recaptcha-container",
+            {
+                size: "invisible",
+                callback: function (response) {
+                    console.log("Captcha Resolved");
+                    this.onSignInSubmit();
+                },
+                defaultCountry: "VN",
+            }
+        );
+    }
+    onSignInSubmit = () => {
+        // e.preventDefault();
+        this.setUpRecaptcha();
+        let phoneNumber = "+84" + this.state.sdt;
+        console.log(phoneNumber);
+        let appVerifier = window.recaptchaVerifier;
+        firebase
+            .auth()
+            .signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                window.confirmationResult = confirmationResult;
+                console.log("OTP is sent");
+                this.setState({ redirect: 4 });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+    onSubmitOtp = (e) => {
+        e.preventDefault();
+        let otpInput = this.state.maxacthuc;
+        let optConfirm = window.confirmationResult;
+        optConfirm
+            .confirm(otpInput)
+            .then((result) => {
+                let user = result.user;
+                this.setState({ redirect: 2 });
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Incorrect OTP");
+            });
+    }
     render() {
         const { formErrors } = this.state;
         const { redirect } = this.state;
@@ -459,6 +602,58 @@ class Singin extends React.Component {
         else if (redirect == 3) {
             return <Redirect to={'/dang-nhap'} />
         }
+        else if (redirect == 4) {
+            return (
+                <>
+                    <div className="row justify-content-center">
+                        <div className="col-lg-6 text-center">
+                            <div className="card bg-light">
+                                <article
+                                    className="card-body mx-auto"
+                                    style={{ maxWidth: "400px" }}
+                                >
+                                    <h4 className="card-title mt-3 text-center">
+                                        Xác thực tài khoản
+                                    </h4>
+                                    <p className="text-center">
+                                        Mã xác thực đã gởi về số điện thoại của bạn
+                                    </p>
+
+                                    <form>
+                                        <div className="form-group input-group">
+                                            <div className="input-group-prepend">
+                                                <span className="input-group-text">
+                                                    <FontAwesomeIcon icon="user" />
+                                                </span>
+                                            </div>
+                                            <input
+                                                name="maxacthuc"
+                                                className="form-control"
+                                                placeholder="Nhập mã xác thực"
+                                                type="text"
+                                                onChange={this.handleChange}
+                                                value={this.state.maxacthuc}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <button
+                                                onClick={this.onSubmitOtp}
+                                                type="submit"
+                                                className="btn btn-primary btn-block"
+                                            >
+                                                {" "}
+                                                Xác thực{" "}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                    <Footer />
+                </>
+            );
+        }
         return (
             <>
                 <div className="row justify-content-center">
@@ -514,6 +709,7 @@ class Singin extends React.Component {
                                     </Tab>
                                     <Tab eventKey="sdt" title="Bắt Đầu Bằng SDT">
                                         <form>
+                                            <div id="recaptcha-container"></div>
                                             <div className="form-group input-group">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">
@@ -521,10 +717,10 @@ class Singin extends React.Component {
                                                     </span>
                                                 </div>
                                                 <input
-                                                    className={formErrors.sdt.length > 0 ? "error" : null}
                                                     name="sdt"
+                                                    className={formErrors.sdt.length > 0 ? "error" : null}
                                                     className="form-control"
-                                                    placeholder="Nhập Số Điện Thoại"
+                                                    placeholder="Nhập SDT"
                                                     type="text"
                                                     onChange={this.handleChange}
                                                     value={this.state.sdt}
@@ -535,12 +731,12 @@ class Singin extends React.Component {
                                             )}
                                             <div className="form-group">
                                                 <button
-                                                    onClick={(evt) => this.handleSubmit(evt)}
+                                                    onClick={this.checkTrungSDT}
                                                     type="submit"
                                                     className="btn btn-primary btn-block"
                                                 >
                                                     {" "}
-                                                    Tiếp Tục{" "}
+                                                        Tiếp Tục{" "}
                                                 </button>
                                             </div>
                                             <p className="text-center">
