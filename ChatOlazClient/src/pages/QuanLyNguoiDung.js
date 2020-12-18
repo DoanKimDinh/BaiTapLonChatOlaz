@@ -59,7 +59,8 @@ class QuanLyNguoiDung extends React.Component {
 				email: "",
 				pass: ""
 			},
-			avatar: undefined
+			avatar: undefined,
+			checkButtonDisable : false
 		};
 	}
 	handleChange = e => {
@@ -91,14 +92,17 @@ class QuanLyNguoiDung extends React.Component {
 		}
 		this.setState({ formErrors, [name]: value }, () => console.log(this.state));
 	};
-	openModal = () => this.setState({ isOpen: true });
-	closeModal = () => this.setState({ isOpen: false });
+	openModal = () => this.setState({ isOpen: true ,checkButtonDisable:false});
+	closeModal = () => this.setState({ isOpen: false  });
 	componentWillMount() {
 		this.fetchAllUsers();
 	}
 
 	// add user
 	addUser = (evt) => {
+		this.setState({
+			checkButtonDisable : true
+		});
 		evt.preventDefault();
 		if (formValid(this.state)) {
 			var body = JSON.stringify({ ten: this.state.ten, sdt: this.state.sdt, email: this.state.email, pass: this.state.pass });
@@ -116,6 +120,7 @@ class QuanLyNguoiDung extends React.Component {
 							'Bạn đã đăng ký thất bại. SDT đã được sử dụng.',
 							'error'
 						)
+						this.setState({checkButtonDisable: false})
 					}
 					else if (res.data.msg == "false") {
 						axios
@@ -127,6 +132,7 @@ class QuanLyNguoiDung extends React.Component {
 										'Bạn đã đăng ký thất bại. Email đã được sử dụng.',
 										'error'
 									)
+									this.setState({checkButtonDisable: false})
 								}
 								else if (res.data.msg == "false") {
 									axios.post(ipConfigg + "/api/insert", body, config)
@@ -137,6 +143,7 @@ class QuanLyNguoiDung extends React.Component {
 													'Bạn đã đăng ký thất bại. SDT hoặc Email đã được sử dụng.',
 													'error'
 												)
+												this.setState({checkButtonDisable: false})
 											}
 											else if (res.data.msg == "true") {
 												this.setState({
@@ -511,7 +518,7 @@ class QuanLyNguoiDung extends React.Component {
 						</Modal.Body>
 						<Modal.Footer>
 							<Button variant="secondary" onClick={this.closeModal}>Close</Button>
-							<Button variant="primary" onClick={(evt) => this.addUser(evt)}>Thêm</Button>
+							<Button variant="primary" disabled = {this.state.checkButtonDisable} onClick={(evt) => this.addUser(evt)}>Thêm</Button>
 						</Modal.Footer>
 					</Modal>
 

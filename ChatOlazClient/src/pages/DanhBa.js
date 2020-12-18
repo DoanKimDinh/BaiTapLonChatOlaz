@@ -326,7 +326,7 @@ class DanhBa extends React.Component {
         if (res.data.mess == "khongtimthay") {
           this.setState({
             booleanFriend: "khongtimthay",
-            friends_search: []
+            friends_search: [{"doan":"fawe"}]
           })
         }
         if (res.data.mess == "da gui yeu cau") {
@@ -669,6 +669,13 @@ class DanhBa extends React.Component {
                                     <td style={{ width: "90%" }}><img src={ipConfigg + "/api/files/" + item.avatar} onClick={() => this.info(item.email, item.sdt, item.ten, item.avatar,item.id)} /><span id="tenFriend">{item.ten} (Da gui yeu cau)</span></td>
                                     <td><i class="fas fa-check-circle fa-2x" onClick={() => this.handleCancelFriend(item.id, this.state.id)} style={{ color: "green" }} title="Đã gửi yêu cầu kết bạn" /></td>
                                   </tr>
+                                );
+                              }
+                              else if (this.state.booleanFriend == "khongtimthay") {
+                                return (
+                                  <tr>
+                                  <td style={{ width: "90%" }}><span id="tenFriend">Không tìm thấy ...</span></td>
+                                </tr>
                                 );
                               }
                             }

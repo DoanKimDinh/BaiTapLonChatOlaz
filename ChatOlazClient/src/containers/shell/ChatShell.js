@@ -218,7 +218,7 @@ class ChatShell extends React.Component {
         this.setState({
             list_all_messages: mang_rong
         })
-      //  this.fetchAllFriends()
+        this.fetchAllFriends()
         this.fetchAllMessages()
         this.fetchAll_OtherMessage(id_friend)
         var my_message = [];
@@ -1070,6 +1070,7 @@ class ChatShell extends React.Component {
                         type="text"
                         name="message_send"
                         placeholder="type a message"
+                        autoComplete="off"
                         onChange={this.handleChange}
                         value={this.state.message_send}
                     />
@@ -1160,6 +1161,7 @@ class ChatShell extends React.Component {
                         type="text"
                         name="message_send"
                         placeholder="type a message"
+                        autoComplete="off"
                         onChange={this.handleChange}
                         value={this.state.message_send}
                     />
@@ -1182,9 +1184,9 @@ class ChatShell extends React.Component {
             title_message = this.render_chatTitle_Friend();
             submit_message = this.render_submitMessages();
         }
-        if (this.state.redirect == 1) {
-            return this.render_callvideo();
-        }
+        // if (this.state.redirect == 1) {
+        //     return this.render_callvideo();
+        // }
         return (
             <>
                 <div id="myBody">
